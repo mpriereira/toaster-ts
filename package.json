@@ -1,0 +1,31 @@
+{
+  "name": "@mpriereira/toaster",
+  "version": "0.0.1",
+  "description": "Library to show toast notifications in your website",
+  "type": "module",
+  "files": [
+    "/dist"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "lint": "ts-standard ./src",
+    "lint:fix": "ts-standard --fix ./src",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Mario Prieto",
+  "license": "MIT",
+  "devDependencies": {
+    "ts-standard": "12.0.2",
+    "typescript": "5.1.6"
+  },
+  "eslintConfig": {
+    "extends": ["./node_modules/ts-standard/eslintrc.json"],
+    "ignorePatterns": ["dist/**"],
+    "parserOptions": {
+      "project": "./tsconfig.json"
+    }
+  }
+}
