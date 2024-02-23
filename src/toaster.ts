@@ -1,3 +1,4 @@
+import './styles.css'
 import { Toast } from './toast'
 
 const toasts: Toast[] = []
