@@ -1,5 +1,7 @@
 #toaster-wrapper {
   position: absolute;
+  right: 20px;
+  bottom: 20px;
 
   &[data-position=bottom-left] {
     left: 20px;
@@ -15,6 +17,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    list-style: none;
 
     .toast {
       padding: 16px 22px;
@@ -25,11 +28,13 @@
       h3 {
         font-size: .9rem;
         font-weight: 400;
+        margin: 0;
       }
 
       p {
         font-size: .8rem;
         font-weight: 350;
+        margin: 0;
       }
     }
   }

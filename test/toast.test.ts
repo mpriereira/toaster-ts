@@ -1,6 +1,8 @@
 import { beforeAll, expect, test } from 'vitest'
 import { toast } from '../src';
 
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+
 beforeAll(() => {
   const wrapper = document.createElement('div')
   wrapper.id = 'toaster-wrapper'
@@ -17,4 +19,14 @@ test('toast text content is correct', () => {
   toast('Toast notification')
   const toastElement = document.querySelector('.toast')
   expect(toastElement!.textContent).toBe('Toast notification')
+})
+
+test('toast is cleared after timeout', async () => {
+  toast('Toast notification')
+  const toastElement = document.querySelector('.toast')
+  expect(document.querySelector('#toaster-wrapper')).toContain(toastElement)
+
+  await delay(2000)
+
+  expect(document.querySelector('#toaster-wrapper')).not.toContain(toastElement)
 })
