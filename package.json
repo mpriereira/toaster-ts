@@ -1,7 +1,7 @@
 {
-  "name": "@mpriereira/toaster",
+  "name": "toaster",
   "version": "0.0.1",
-  "description": "Library to show toast notifications in your website",
+  "description": "Library to show toast notifications in your website, no matter your framework",
   "type": "module",
   "files": [
     "/dist"
@@ -10,34 +10,24 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "rollup -c",
-    "build:watch": "rollup -c --watch",
+    "dev": "rollup -c --watch",
     "lint": "ts-standard ./src",
     "lint:fix": "ts-standard --fix ./src",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "keywords": [],
   "author": "Mario Prieto",
   "license": "MIT",
   "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.6",
+    "happy-dom": "^13.5.0",
     "rollup": "^4.12.0",
-    "rollup-plugin-css-only": "^4.5.2",
+    "rollup-plugin-scss": "^4.0.0",
+    "sass": "^1.71.1",
     "ts-standard": "12.0.2",
-    "typescript": "5.1.6"
-  },
-  "eslintConfig": {
-    "extends": [
-      "./node_modules/ts-standard/eslintrc.json"
-    ],
-    "ignorePatterns": [
-      "/*",
-      "!/src"
-    ],
-    "parserOptions": {
-      "project": "./tsconfig.json"
-    },
-    "rules": {
-      "@typescript-eslint/space-before-function-paren": "off"
-    }
+    "typescript": "5.1.6",
+    "vitest": "^1.3.1"
   }
 }

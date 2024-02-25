@@ -4,17 +4,15 @@ export class Toast {
   id: string
   title: string
   description: string | undefined
+  htmlElement: HTMLLIElement
 
-  constructor(title: string, description?: string) {
+  constructor (title: string, description?: string) {
     this.id = generateUuid()
     this.title = title
     this.description = description
-    console.log(this.id)
-  }
-
-  show(): void {
-    console.log(
-      `Creating toast message with title "${this.title}" and description "${this.description}"`
-    )
+    this.htmlElement = document.createElement('li')
+    this.htmlElement.setAttribute('id', this.id)
+    this.htmlElement.className = 'toast'
+    this.htmlElement.innerHTML = `<h3>${this.title}</h3>${this.description != null ? `<p>${this.description}</p>` : ''}`
   }
 }

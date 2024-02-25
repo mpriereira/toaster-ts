@@ -1,1 +1,1 @@
-export { createToast } from './toaster'
+export { toast } from './toaster'

@@ -1,0 +1,12 @@
+{
+  "extends": [
+    "./node_modules/ts-standard/eslintrc.json"
+  ],
+  "ignorePatterns": [
+    "/*",
+    "!/src"
+  ],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  }
+}

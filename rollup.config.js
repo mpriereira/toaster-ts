@@ -1,12 +1,14 @@
 import typescript from '@rollup/plugin-typescript';
-import css from 'rollup-plugin-css-only'
+import terser from '@rollup/plugin-terser'
+import scss from 'rollup-plugin-scss'
 
-/*** @type {import('rollup').RollupOptions} */
+/** @type {import('rollup').RollupOptions} */
 export default {
   input: 'src/index.ts',
   output: {
     dir: 'dist',
-    format: 'es'
+    format: 'es',
+    plugins: [terser()]
   },
-  plugins: [typescript(), css({ output: 'bundle.css' })]
+  plugins: [typescript(), scss({ fileName: 'bundle.css' })]
 };

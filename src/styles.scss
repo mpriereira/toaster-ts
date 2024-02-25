@@ -1,0 +1,36 @@
+#toaster-wrapper {
+  position: absolute;
+
+  &[data-position=bottom-left] {
+    left: 20px;
+    bottom: 20px;
+  }
+
+  &[data-position=bottom-right] {
+    right: 20px;
+    bottom: 20px;
+  }
+
+  ol {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+#toaster-wrapper > ol > .toast {
+  padding: 16px 22px;
+  border: 1px solid rgb(215 215 215 / .4);
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px 0 rgb(215 215 215 / .5);
+}
+
+.toast > h3 {
+  font-size: .9rem;
+  font-weight: 400;
+}
+
+.toast > p {
+  font-size: .8rem;
+  font-weight: 350;
+}
