@@ -15,22 +15,22 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+
+    .toast {
+      padding: 16px 22px;
+      border: 1px solid rgb(215 215 215 / .4);
+      border-radius: 5px;
+      box-shadow: 2px 2px 5px 0 rgb(215 215 215 / .5);
+
+      h3 {
+        font-size: .9rem;
+        font-weight: 400;
+      }
+
+      p {
+        font-size: .8rem;
+        font-weight: 350;
+      }
+    }
   }
-}
-
-#toaster-wrapper > ol > .toast {
-  padding: 16px 22px;
-  border: 1px solid rgb(215 215 215 / .4);
-  border-radius: 5px;
-  box-shadow: 2px 2px 5px 0 rgb(215 215 215 / .5);
-}
-
-.toast > h3 {
-  font-size: .9rem;
-  font-weight: 400;
-}
-
-.toast > p {
-  font-size: .8rem;
-  font-weight: 350;
 }

@@ -34,5 +34,5 @@ function render (toast: Toast): void {
   ] // last two elements + new toast */
   listContainerElement.insertAdjacentElement('afterbegin', toast.htmlElement)
 
-  // setTimeout(() => listContainerElement.removeChild(toast.htmlElement), 2000)
+  setTimeout(() => listContainerElement.removeChild(toast.htmlElement), 2000)
 }
