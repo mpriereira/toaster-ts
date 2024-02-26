@@ -1,6 +1,6 @@
-# Toaster
+# toaster-ts
 
-Toaster is a simple JavaScript library, written in TypeScript, to show notifications in your website.
+toaster-ts is a simple JavaScript library, written in TypeScript, to show notifications in your website.
 
 > :warning: **WARNING: This library is still a work in progress!** :warning:
 >
