@@ -1,6 +1,6 @@
 {
   "name": "toaster-ts",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Library to show toast notifications in your website, no matter your framework",
   "type": "module",
   "files": [
