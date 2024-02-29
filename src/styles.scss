@@ -4,6 +4,7 @@
   bottom: 20px;
 
   &[data-position=bottom-left] {
+    right: unset;
     left: 20px;
     bottom: 20px;
   }

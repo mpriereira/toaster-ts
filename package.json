@@ -19,6 +19,11 @@
   "keywords": [],
   "author": "Mario Prieto",
   "license": "MIT",
+  "homepage": "https://toaster-ts.vercel.app/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mpriereira/toaster-ts.git"
+  },
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.6",
