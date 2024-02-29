@@ -22,11 +22,11 @@ test('toast text content is correct', () => {
 })
 
 test('toast is cleared after timeout', async () => {
-  toast('Toast notification')
+  toast('Toast notification', { timeout: 10 })
   const toastElement = document.querySelector('.toast')
   expect(document.querySelector('#toaster-wrapper')).toContain(toastElement)
 
-  await delay(2000)
+  await delay(10)
 
   expect(document.querySelector('#toaster-wrapper')).not.toContain(toastElement)
 })

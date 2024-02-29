@@ -8,7 +8,12 @@ export default function Home() {
 
   const handleClick = (position: string) => {
     setPosition(position)
-    toast('Toaster', 'A universal library for toast notifications')
+    toast(
+      'Toaster',
+      {
+        description: 'A universal library for toast notifications'
+      }
+    )
   }
 
   return (

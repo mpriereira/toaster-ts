@@ -4,12 +4,26 @@ import { Toast } from './toast'
 const toasts: Toast[] = []
 let listContainerElement: HTMLOListElement
 
-export function toast (title: string, description?: string): void {
+export interface ToastOptions {
+  description?: string
+  timeout?: number
+}
+
+export function toast (
+  title: string,
+  options: ToastOptions = { description: '', timeout: 2000 }
+): void {
   if (toasts.length === 0) {
     createListContainer()
   }
 
-  render(new Toast(title, description))
+  render(new Toast(
+    title,
+    {
+      description: options?.description,
+      timeout: options?.timeout ?? 2000
+    }
+  ))
 }
 
 function createListContainer (): void {
@@ -34,5 +48,5 @@ function render (toast: Toast): void {
   ] // last two elements + new toast */
   listContainerElement.insertAdjacentElement('afterbegin', toast.htmlElement)
 
-  setTimeout(() => listContainerElement.removeChild(toast.htmlElement), 2000)
+  setTimeout(() => listContainerElement.removeChild(toast.htmlElement), toast.options.timeout)
 }
