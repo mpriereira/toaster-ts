@@ -4,7 +4,7 @@
   "description": "Library to show toast notifications in your website, no matter your framework",
   "type": "module",
   "files": [
-    "/dist"
+    "dist"
   ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -16,7 +16,11 @@
     "test": "vitest",
     "test:coverage": "vitest run --coverage"
   },
-  "keywords": [],
+  "keywords": [
+    "toast",
+    "vanilla",
+    "notification"
+  ],
   "author": "Mario Prieto",
   "license": "MIT",
   "homepage": "https://toaster-ts.vercel.app/",
