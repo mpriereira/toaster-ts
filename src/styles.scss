@@ -1,30 +1,101 @@
 #toaster-wrapper {
-  position: absolute;
-  right: 20px;
-  bottom: 20px;
-
-  &[data-position=bottom-left] {
-    right: unset;
-    left: 20px;
-    bottom: 20px;
-  }
-
-  &[data-position=bottom-right] {
-    right: 20px;
-    bottom: 20px;
-  }
-
   ol {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    width: var(--width);
+    position: fixed;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
     list-style: none;
+    outline: none;
+    z-index: 999999999;
+
+    &[data-x-position="right"] {
+      right: max(var(--offset), env(safe-area-inset-right));
+    }
+
+    &[data-x-position="left"] {
+      left: max(var(--offset), env(safe-area-inset-left));
+    }
+
+    &[data-x-position="center"] {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    &[data-y-position="top"] {
+      top: max(var(--offset), env(safe-area-inset-top));
+    }
+
+    &[data-y-position="bottom"] {
+      bottom: max(var(--offset), env(safe-area-inset-bottom));
+    }
 
     .toast {
+      --lift: -1;
+      --y: translateY(100%);
+      --lift-amount: calc(var(--lift) * var(--gap));
+      box-sizing: border-box;
+      opacity: 0;
+      transform: var(--y);
+      z-index: var(--z-index);
+      position: absolute;
+      width: 356px;
+      background: #FFF;
       padding: 16px 22px;
       border: 1px solid rgb(215 215 215 / .4);
       border-radius: 5px;
       box-shadow: 2px 2px 5px 0 rgb(215 215 215 / .5);
+      transition:
+              transform 400ms,
+              opacity 400ms,
+              height 400ms,
+              box-shadow 200ms;
+
+      &[data-y-position="top"] {
+        top: 0;
+        --y: translateY(-100%);
+        --lift: 1;
+        --lift-amount: calc(1 * var(--gap));
+      }
+
+      &[data-y-position="bottom"] {
+        bottom: 0;
+        --y: translateY(100%);
+        --lift: -1;
+        --lift-amount: calc(var(--lift) * var(--gap));
+      }
+
+      &[data-mounted="true"] {
+        --y: translateY(0);
+        opacity: 1;
+      }
+
+      &[data-front="false"] {
+        --scale: var(--toasts-before) * 0.05 + 1;
+        --y: translateY(calc(var(--lift-amount) * var(--toasts-before)))
+        scale(calc(-1 * var(--scale)));
+        height: var(--front-toast-height);
+      }
+
+      &[data-visible=false] {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      &[data-removed="true"] {
+        &[data-front="true"] {
+          --y: translateY(calc(var(--lift) * -100%));
+          opacity: 0;
+        }
+
+        &[data-front="false"] {
+          --y: translateY(40%);
+          opacity: 0;
+          transition:
+                  transform 500ms,
+                  opacity 200ms;
+        }
+      }
 
       h3 {
         font-size: .9rem;
