@@ -46,18 +46,41 @@ export function toast (msg: string, { description }: ToastOptions = { descriptio
 
 function renderList (): void {
   const wrapper = document.querySelector('#toaster-wrapper') as HTMLElement
-  const list = document.createElement('ol')
-  wrapper.append(list)
+  const ol = document.createElement('ol')
+  wrapper.append(ol)
 
   const [yPosition, xPosition] = wrapper.getAttribute('data-position')?.split('-') ?? DEFAULT_POSITION.split('-')
 
-  list.outerHTML = `
+  ol.outerHTML = `
   <ol
   data-x-position="${xPosition}"
   data-y-position="${yPosition}"
   id="toaster-list"
   style="--front-toast-height: 0px; --offset: ${VIEWPORT_OFFSET}; --width: ${TOAST_WIDTH}px; --gap: ${GAP}px">
   </ol>`
+
+  registerMouseOver(document.getElementById('toaster-list') as HTMLOListElement)
+}
+
+function registerMouseOver (ol: HTMLOListElement): void {
+  ol.addEventListener('mouseenter', () => {
+    for (let i = 0; i < ol.children.length; i++) {
+      const el = ol.children[i] as HTMLLIElement
+      if (el.getAttribute('data-expanded') === 'true') continue
+      el.setAttribute('data-expanded', 'true')
+
+      clearRemoveTimeout(el)
+    }
+  })
+  ol.addEventListener('mouseleave', () => {
+    for (let i = 0; i < ol.children.length; i++) {
+      const el = ol.children[i] as HTMLLIElement
+      if (el.getAttribute('data-expanded') === 'false') continue
+      el.setAttribute('data-expanded', 'false')
+
+      registerRemoveTimeout(el)
+    }
+  })
 }
 
 function show (msg: string, { description }: ToastOptions): void {
@@ -91,6 +114,7 @@ function renderToast (list: HTMLElement, msg: string, { description }: ToastOpti
   data-removed="false"
   data-mounted="false"
   data-front="true"
+  data-expanded="false"
   data-index="${0}"
   data-y-position="${list.getAttribute('data-y-position') ?? DEFAULT_POSITION.split('-')[0]}"
   data-x-position="${list.getAttribute('data-x-position') ?? DEFAULT_POSITION.split('-')[1]}"
@@ -102,8 +126,7 @@ function renderToast (list: HTMLElement, msg: string, { description }: ToastOpti
 }
 
 function refreshProperties (): void {
-  const list = document.getElementById('toaster-list')
-  if (list == null) return
+  const list = document.getElementById('toaster-list') as HTMLOListElement
 
   let heightsBefore = 0
   let removed = 0
@@ -130,16 +153,23 @@ function refreshProperties (): void {
 }
 
 function registerRemoveTimeout (el: HTMLLIElement): void {
-  setTimeout(() => {
+  const tid = window.setTimeout(() => {
     remove(el)
   }, TOAST_LIFETIME)
+  el.setAttribute('data-remove-tid', `${tid}`)
+}
+
+function clearRemoveTimeout (el: HTMLLIElement): void {
+  const tid = el.getAttribute('data-remove-tid')
+  if (tid != null) window.clearTimeout(+tid)
 }
 
 function remove (el: HTMLLIElement): void {
   el.setAttribute('data-removed', 'true')
   refreshProperties()
 
-  setTimeout(() => {
+  const tid = window.setTimeout(() => {
     el.parentElement?.removeChild(el)
   }, TIME_BEFORE_UNMOUNT)
+  el.setAttribute('data-unmount-tid', `${tid}`)
 }
