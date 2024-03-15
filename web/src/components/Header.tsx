@@ -18,10 +18,10 @@ export const Header = () => {
   return (
     <>
       <SectionContainer classNames="pt-20 flex flex-col items-center gap-2.5">
-        <h1 className="text-4xl font-bold">toaster-ts</h1>
-        <p className="text-xl font-normal">A library to render notifications no matter your framework</p>
+        <h1 className="text-3xl sm:text-4xl font-bold">toaster-ts</h1>
+        <p className="text-lg sm:text-xl font-normal">A library to render notifications no matter your framework</p>
       </SectionContainer>
-      <SectionContainer classNames="pt-6 pb-12 grid grid-flow-col-dense justify-center gap-3">
+      <SectionContainer classNames="pt-6 pb-3 grid grid-flow-col-dense justify-center gap-3">
         <Pill href="https://github.com/mpriereira/toaster-ts">
           <Image src={GitHubIcon} alt="GitHub icon" className="size-6" />
           GitHub
@@ -30,10 +30,19 @@ export const Header = () => {
           <Image src={NpmIcon} alt="npm icon" className="size-6" />
           npm
         </Pill>
-        <Button classNames="flex justify-center gap-x-1.5 font-sm row-start-2 col-start-1 col-end-3" onClick={() => showToast()}>
-          <Image src={BellIcon} alt="npm icon" className="size-5" />
-          Try it!
+        <Button classNames="flex justify-center gap-x-1.5 mx-auto row-start-2 col-start-1 col-end-3" onClick={() => showToast()}>
+          <Image src={BellIcon} alt="Bell icon" className="size-5" />
+          <span className="text-sm md:text-base">Try it!</span>
         </Button>
+      </SectionContainer>
+      <SectionContainer classNames="pt-2 pb-12 flex justify-center">
+        <a
+          className="text-sm text-gray-700 underline"
+          href="https://github.com/mpriereira/toaster-ts#readme"
+          target="_blank"
+          rel="noopener noreferrer">
+          Documentation
+        </a>
       </SectionContainer>
     </>
   )

@@ -1,10 +1,10 @@
 import { SectionContainer } from '@/components/SectionContainer';
-import { Code } from '@nextui-org/code';
 import { Position, positions } from '@/components/Toaster';
 import { Button } from '@/components/Button';
 import { toast } from '../../../dist';
 import { useIsMount } from '@/hooks/useIsMount';
 import { Dispatch, SetStateAction, useEffect } from 'react';
+import { CodeBlock } from '@/components/CodeBlock';
 
 type BodyProps = {
   position: Position
@@ -39,12 +39,14 @@ export const Body = ({ position: currentPosition, setPosition }: BodyProps) => {
     <>
       <SectionContainer classNames="py-4 flex flex-col gap-2.5">
         <h2 className="text-xl font-semibold">Installation</h2>
-        <Code className="mr-auto px-5 py-3 bg-gray-200/50" size="sm">npm install ts-toaster</Code>
+        <CodeBlock>
+          npm install ts-toaster
+        </CodeBlock>
       </SectionContainer>
 
       <SectionContainer classNames="py-4 flex flex-col gap-2.5">
         <h2 className="text-xl font-semibold">Usage</h2>
-        <Code className="mr-auto px-5 py-3 bg-gray-200/50" size="sm">
+        <CodeBlock>
           {`
           import { toast } from 'toaster-ts';
           `}
@@ -52,21 +54,21 @@ export const Body = ({ position: currentPosition, setPosition }: BodyProps) => {
           {`
           toast('My first toast');
           `}
-        </Code>
+        </CodeBlock>
       </SectionContainer>
 
       <SectionContainer classNames="py-4 flex flex-col gap-y-6">
         <h2 className="text-xl font-semibold">Customize position</h2>
-        <div className="flex gap-2.5 justify-between">
+        <div className="grid grid-cols-2 xs:grid-cols-3 md:grid-flow-col-dense gap-2.5 justify-between flex-wrap">
           {positions.map(position =>
             <Button key={position} classNames="text-sm" onClick={() => handleClick(position)}>
               {position}
             </Button>
           )}
         </div>
-        <Code className="p-5 bg-gray-200/50" size="sm">
+        <CodeBlock>
           {`<section id="toaster-wrapper" data-position="${currentPosition}" />`}
-        </Code>
+        </CodeBlock>
       </SectionContainer>
     </>
   )

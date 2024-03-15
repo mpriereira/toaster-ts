@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 import { nextui } from '@nextui-org/theme';
+import defaultTheme from 'tailwindcss/defaultTheme';
 
 const config: Config = {
   content: [
@@ -14,6 +15,10 @@ const config: Config = {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      },
+      screens: {
+        'xs': '475px',
+        ...defaultTheme.screens,
       },
     },
   },

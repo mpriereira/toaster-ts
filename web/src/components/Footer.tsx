@@ -1,9 +1,9 @@
 export const Footer = () => {
   return (
-    <footer className="pt-20 flex justify-center">
-      <p>This library has been deeply inspired by&nbsp;
+    <footer className="pt-16 py-6 px-10 flex justify-center text-sm xs:text-base">
+      <p>This library has been inspired by&nbsp;
         <a
-          className="hover:underline"
+          className="text-gray-700 underline"
           target="_blank"
           rel="noopener noreferrer"
           href="https://sonner.emilkowal.ski/">
