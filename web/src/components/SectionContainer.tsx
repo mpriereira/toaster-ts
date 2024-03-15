@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 
 type SectionContainerProps = {
   children: ReactNode
-  classNames: string
+  classNames?: string
 }
 
 export const SectionContainer = ({ children, classNames }: SectionContainerProps) => {

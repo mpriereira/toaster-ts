@@ -1,16 +1,19 @@
-import { MouseEventHandler } from 'react';
+import { MouseEventHandler, ReactNode } from 'react';
 
 type ButtonProps = {
-  label: string
+  children: ReactNode
+  classNames?: string
   onClick: MouseEventHandler<HTMLButtonElement>
 }
 
-export const Button = ({ label, onClick }: ButtonProps) => {
+export const Button = ({ classNames, children, onClick }: ButtonProps) => {
   return (
     <button
-      className="bg-white hover:bg-gray-100 border border-gray-300 py-2 px-3 rounded-md text-sm"
+      className={`
+        bg-white hover:bg-gray-100 border border-gray-300 py-2 px-3 rounded-full ${classNames}
+      `}
       onClick={onClick}>
-      {label}
+      {children}
     </button>
   )
 }
