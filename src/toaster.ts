@@ -15,16 +15,33 @@ export interface ToastOptions {
 
 export function toast (msg: string, { description }: ToastOptions = { description: '' }): void {
   if (document.querySelector('#toaster-wrapper') == null) {
-    console.error('No wrapper element found')
+    console.error('No wrapper element found, please follow documentation')
     return
   }
 
   if (document.getElementById('toaster-list') == null) {
-    renderList()
+    renderToaster()
+    registerMouseOver()
   }
 
   updatePosition()
   show(msg, { description })
+}
+
+function renderToaster (): void {
+  const el = document.querySelector('#toaster-wrapper') as HTMLElement
+  const ol = document.createElement('ol')
+  el.append(ol)
+
+  const [y, x] = el.getAttribute('data-position')?.split('-') ?? DEFAULT_POSITION.split('-')
+
+  ol.outerHTML = `
+  <ol
+  data-x-position="${x}"
+  data-y-position="${y}"
+  id="toaster-list"
+  style="--front-toast-height: 0px; --offset: ${VIEWPORT_OFFSET}; --width: ${TOAST_WIDTH}px; --gap: ${GAP}px">
+  </ol>`
 }
 
 function updatePosition (): void {
@@ -41,25 +58,8 @@ function updatePosition (): void {
   }
 }
 
-function renderList (): void {
-  const el = document.querySelector('#toaster-wrapper') as HTMLElement
-  const ol = document.createElement('ol')
-  el.append(ol)
-
-  const [y, x] = el.getAttribute('data-position')?.split('-') ?? DEFAULT_POSITION.split('-')
-
-  ol.outerHTML = `
-  <ol
-  data-x-position="${x}"
-  data-y-position="${y}"
-  id="toaster-list"
-  style="--front-toast-height: 0px; --offset: ${VIEWPORT_OFFSET}; --width: ${TOAST_WIDTH}px; --gap: ${GAP}px">
-  </ol>`
-
-  registerMouseOver(document.getElementById('toaster-list') as HTMLOListElement)
-}
-
-function registerMouseOver (ol: HTMLOListElement): void {
+function registerMouseOver (): void {
+  const ol = document.getElementById('toaster-list') as HTMLOListElement
   ol.addEventListener('mouseenter', () => {
     for (let i = 0; i < ol.children.length; i++) {
       const el = ol.children[i] as HTMLLIElement
@@ -97,7 +97,7 @@ function show (msg: string, { description }: ToastOptions): void {
 
     refreshProperties()
     registerRemoveTimeout(el)
-  }, 30)
+  }, 16)
 }
 
 function renderToast (list: HTMLElement, msg: string, { description }: ToastOptions): { toast: HTMLLIElement, id: string } {
