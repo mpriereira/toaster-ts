@@ -14,8 +14,7 @@ export interface ToastOptions {
 }
 
 export function toast (msg: string, { description }: ToastOptions = { description: '' }): void {
-  const wrapper = document.querySelector('#toaster-wrapper')
-  if (wrapper == null) {
+  if (document.querySelector('#toaster-wrapper') == null) {
     console.error('No wrapper element found')
     return
   }
@@ -24,37 +23,35 @@ export function toast (msg: string, { description }: ToastOptions = { descriptio
     renderList()
   }
 
-  setTimeout(() => {
-    const wrapper = document.querySelector('#toaster-wrapper') as HTMLElement
-    const list = document.getElementById('toaster-list') as HTMLOListElement
-    const [yPosition, xPosition] = wrapper.getAttribute('data-position')?.split('-') ?? DEFAULT_POSITION.split('-')
-    if (xPosition !== list.getAttribute('data-x-position') || yPosition !== list.getAttribute('data-y-position')) {
-      list.setAttribute('data-x-position', xPosition)
-      list.setAttribute('data-y-position', yPosition)
-      if (list.children.length > 0) {
-        for (let i = 0; i < list.children.length; i++) {
-          const el = list.children.item(i) as HTMLLIElement
-          el.setAttribute('data-x-position', xPosition)
-          el.setAttribute('data-y-position', yPosition)
-        }
-      }
-    }
-  })
-
+  updatePosition()
   show(msg, { description })
 }
 
-function renderList (): void {
-  const wrapper = document.querySelector('#toaster-wrapper') as HTMLElement
-  const ol = document.createElement('ol')
-  wrapper.append(ol)
+function updatePosition (): void {
+  const list = document.getElementById('toaster-list') as HTMLOListElement
+  const [y, x] = list.parentElement?.getAttribute('data-position')?.split('-') ?? DEFAULT_POSITION.split('-')
+  if (x !== list.getAttribute('data-x-position') || y !== list.getAttribute('data-y-position')) {
+    list.setAttribute('data-x-position', x)
+    list.setAttribute('data-y-position', y)
+    for (let i = 0; i < list.children.length; i++) {
+      const el = list.children.item(i) as HTMLLIElement
+      el.setAttribute('data-x-position', x)
+      el.setAttribute('data-y-position', y)
+    }
+  }
+}
 
-  const [yPosition, xPosition] = wrapper.getAttribute('data-position')?.split('-') ?? DEFAULT_POSITION.split('-')
+function renderList (): void {
+  const el = document.querySelector('#toaster-wrapper') as HTMLElement
+  const ol = document.createElement('ol')
+  el.append(ol)
+
+  const [y, x] = el.getAttribute('data-position')?.split('-') ?? DEFAULT_POSITION.split('-')
 
   ol.outerHTML = `
   <ol
-  data-x-position="${xPosition}"
-  data-y-position="${yPosition}"
+  data-x-position="${x}"
+  data-y-position="${y}"
   id="toaster-list"
   style="--front-toast-height: 0px; --offset: ${VIEWPORT_OFFSET}; --width: ${TOAST_WIDTH}px; --gap: ${GAP}px">
   </ol>`
@@ -89,7 +86,7 @@ function show (msg: string, { description }: ToastOptions): void {
 
   renderToast(list, msg, { description })
 
-  setTimeout(() => {
+  window.setTimeout(() => {
     const el = list.children[0] as HTMLLIElement
     const height = el.getBoundingClientRect().height
 
@@ -119,7 +116,16 @@ function renderToast (list: HTMLElement, msg: string, { description }: ToastOpti
   data-y-position="${list.getAttribute('data-y-position') ?? DEFAULT_POSITION.split('-')[0]}"
   data-x-position="${list.getAttribute('data-x-position') ?? DEFAULT_POSITION.split('-')[1]}"
   style="--index: 0; --toasts-before: ${0}; --z-index: ${count}; --offset: 0px; --initial-height: 0px;">
-    <h3>${msg}</h3>${description != null ? `<p>${description}</p>` : ''}
+    <div data-content="">
+      <div data-title="">
+        ${msg}
+      </div>
+      ${
+        description != null
+          ? `<div data-description="">${description}</div>`
+          : ''
+      }
+    </div>
   </li>`
 
   return { toast, id }

@@ -4,9 +4,9 @@ import { toast } from '../src';
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 beforeAll(() => {
-  const wrapper = document.createElement('div')
-  wrapper.id = 'toaster-wrapper'
+  const wrapper = document.createElement('section')
   document.body.insertAdjacentElement('beforeend', wrapper)
+  wrapper.outerHTML = '<section id="toaster-wrapper"></section>'
 })
 
 test('toast is rendered in document', () => {
