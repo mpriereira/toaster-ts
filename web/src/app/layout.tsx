@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import '@fontsource-variable/onest';
 import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "toaster-ts: A library to create toast notifications in your website",
@@ -16,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} relative min-h-screen`}>{children}</body>
+      <body className="relative min-h-screen">{children}</body>
     </html>
   );
 }
