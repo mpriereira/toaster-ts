@@ -55,18 +55,18 @@ export const Body = ({ position: currentPosition, setPosition }: BodyProps) => {
         </Code>
       </SectionContainer>
 
-      <SectionContainer classNames="py-4 flex flex-col gap-y-3">
+      <SectionContainer classNames="py-4 flex flex-col gap-y-6">
         <h2 className="text-xl font-semibold">Customize position</h2>
-        <Code className="p-5 bg-gray-200/50" size="sm">
-          {`<section id="toaster-wrapper" data-position="${currentPosition}" />`}
-        </Code>
-        <div className="flex gap-2.5 mx-auto">
+        <div className="flex gap-2.5 justify-between">
           {positions.map(position =>
             <Button key={position} classNames="text-sm" onClick={() => handleClick(position)}>
               {position}
             </Button>
           )}
         </div>
+        <Code className="p-5 bg-gray-200/50" size="sm">
+          {`<section id="toaster-wrapper" data-position="${currentPosition}" />`}
+        </Code>
       </SectionContainer>
     </>
   )
