@@ -1,10 +1,10 @@
+import { Dispatch, SetStateAction, useEffect } from 'react';
 import { SectionContainer } from '@/components/SectionContainer';
 import { Position, positions } from '@/components/Toaster';
 import { Button } from '@/components/Button';
-import { toast } from '../../../dist';
-import { useIsMount } from '@/hooks/useIsMount';
-import { Dispatch, SetStateAction, useEffect } from 'react';
 import { CodeBlock } from '@/components/CodeBlock';
+import { useIsMount } from '@/hooks/useIsMount';
+import { toast } from '../../../dist';
 
 type BodyProps = {
   position: Position
@@ -47,19 +47,15 @@ export const Body = ({ position: currentPosition, setPosition }: BodyProps) => {
       <SectionContainer classNames="py-4 flex flex-col gap-2.5">
         <h2 className="text-xl font-semibold">Usage</h2>
         <CodeBlock>
-          {`
-          import { toast } from 'toaster-ts';
-          `}
+          {`import { toast } from 'toaster-ts';`}
           <br /><br />
-          {`
-          toast('My first toast');
-          `}
+          {`toast('My first toast');`}
         </CodeBlock>
       </SectionContainer>
 
       <SectionContainer classNames="py-4 flex flex-col gap-y-6">
         <h2 className="text-xl font-semibold">Customize position</h2>
-        <div className="grid grid-cols-2 xs:grid-cols-3 md:grid-flow-col-dense gap-2.5 justify-between flex-wrap">
+        <div className="grid grid-cols-2 xs:grid-cols-3 md:grid-flow-col-dense gap-2.5 justify-between">
           {positions.map(position =>
             <Button key={position} classNames="text-sm" onClick={() => handleClick(position)}>
               {position}

@@ -1,11 +1,11 @@
+import Image from 'next/image';
 import { SectionContainer } from '@/components/SectionContainer';
 import { Pill } from '@/components/Pill';
-import Image from 'next/image';
+import { Button } from '@/components/Button';
+import { toast } from '../../../dist';
 import GitHubIcon from '../../public/github.svg';
 import NpmIcon from '../../public/npm.svg';
 import BellIcon from '../../public/bell.svg'
-import { Button } from '@/components/Button';
-import { toast } from '../../../dist';
 
 export const Header = () => {
 
