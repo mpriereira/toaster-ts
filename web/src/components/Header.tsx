@@ -9,8 +9,8 @@ import BellIcon from '../../public/bell.svg'
 
 export const Header = () => {
 
-  const showToast = () => {
-    toast('toaster-ts', {
+  const showSampleToast = () => {
+    toast.message('toaster-ts', {
       description: 'A universal library for toast notifications'
     })
   }
@@ -30,7 +30,7 @@ export const Header = () => {
           <Image src={NpmIcon} alt="npm icon" className="size-6" />
           npm
         </Pill>
-        <Button classNames="flex justify-center gap-x-1.5 mx-auto row-start-2 col-start-1 col-end-3" onClick={() => showToast()}>
+        <Button classNames="flex justify-center gap-x-1.5 mx-auto row-start-2 col-start-1 col-end-3" onClick={() => showSampleToast()}>
           <Image src={BellIcon} alt="Bell icon" className="size-5" />
           <span className="text-sm md:text-base">Try it!</span>
         </Button>
