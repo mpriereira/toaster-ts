@@ -1,11 +1,11 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { SectionContainer } from '@/components/SectionContainer';
-import { positions, types, Position, Type } from '@/components/Toaster';
+import { positions, extendedTypes, Position, Type, ExtendedType } from '@/components/Toaster';
 import { Button } from '@/components/Button';
 import { CodeBlock } from '@/components/CodeBlock';
+import { Toggle } from '@/components/Toggle';
 import { useIsMount } from '@/hooks/useIsMount';
-import { toast } from '../../../dist';
-import { ToastOptions } from '../../../dist/toaster';
+import { toast } from 'toaster-ts';
 
 type BodyProps = {
   position: Position
@@ -17,8 +17,7 @@ type BodyProps = {
 export const Body = ({ position: currentPosition, setPosition, richColors, setRichColors }: BodyProps) => {
 
   const isMount = useIsMount()
-  const [currentType, setCurrentType] = useState<Type | undefined>(undefined)
-  const [withDescription, setWithDescription] = useState<boolean>(false)
+  const [currentType, setCurrentType] = useState<ExtendedType>('default')
 
   useEffect(() => {
     if (isMount) {
@@ -26,16 +25,18 @@ export const Body = ({ position: currentPosition, setPosition, richColors, setRi
     }
   }, [currentPosition, richColors])
 
-  const showToast = ({ type, description }: ToastOptions) => {
-    toast(`${type ? `${type} toast message` : 'Generic toast message'}`, {
+  const isStandardType = (type: ExtendedType): type is Type => {
+    return type !== 'default' && type !== 'withDescription'
+  }
+
+  const showToast = ({ type, description }: { type: ExtendedType, description?: string }) => {
+    toast(`${isStandardType(type) ? `${type} toast message` : 'Default toast message'}`, {
       description,
-      type
+      type: isStandardType(type) ? type : undefined
     })
   }
 
-  const changeType = (type?: Type, description?: string) => {
-    setRichColors(false)
-    setWithDescription(!!description)
+  const changeType = ({ type, description }: { type: ExtendedType, description?: string }) => {
     setCurrentType(type)
     showToast({ type, description })
   }
@@ -48,13 +49,8 @@ export const Body = ({ position: currentPosition, setPosition, richColors, setRi
     showToast({ type: currentType })
   }
 
-  const activateRichColors = (type?: Type) => {
-    setCurrentType(type)
-    if (!richColors) {
-      setRichColors(true)
-    } else {
-      showToast({ type })
-    }
+  const activateRichColors = (event: ChangeEvent<HTMLInputElement>) => {
+    setRichColors(event.target.checked)
   }
 
   return (
@@ -87,28 +83,28 @@ export const Body = ({ position: currentPosition, setPosition, richColors, setRi
       <SectionContainer classNames="py-4 flex flex-col gap-2.5">
         <h2 className="text-xl font-semibold">Types</h2>
         <div className="grid grid-cols-2 xs:grid-cols-3 md:grid-cols-6 gap-2.5 justify-between">
-          <Button key="default" classNames="text-sm" onClick={() => changeType(undefined)}>
-            default
-          </Button>
-          <Button key="description" classNames="text-sm" onClick={() => changeType(undefined, 'Includes a description')}>
-            description
-          </Button>
-          {types.map(type =>
-            <Button key={type} classNames="text-sm" onClick={() => changeType(type)}>
+          {extendedTypes.map(type =>
+            <Button
+              key={type}
+              classNames={type === currentType ? 'bg-gray-50 border-gray-400' : ''}
+              onClick={() => changeType({ type, description: type === 'withDescription' ? 'Includes a description' : undefined })}>
               {type}
             </Button>
           )}
         </div>
         <CodeBlock>
-          {`toast${currentType ? `.${currentType}` : `${withDescription ? `.message` : ''}`}(${currentType ? `'${currentType} toast message'` : `${withDescription ? `'Generic toast message', { description: 'Includes a description' }` : `'Generic toast message'`}`})`}
+          {`toast${isStandardType(currentType) ?`.${currentType}` : `${currentType === 'withDescription' ? `.message` : ''}`}(${isStandardType(currentType) ? `'${currentType} toast message'` : `${currentType === 'withDescription' ? `'Generic toast message', { description: 'Includes a description' }` : `'Generic toast message'`}`})`}
         </CodeBlock>
       </SectionContainer>
 
       <SectionContainer classNames="py-4 flex flex-col gap-y-6">
         <h2 className="text-xl font-semibold">Customize position</h2>
-        <div className="grid grid-cols-2 xs:grid-cols-3 md:grid-flow-col-dense gap-2.5 justify-between">
+        <div className="grid grid-cols-2 xs:grid-cols-3 md:grid-cols-6 gap-2.5 justify-between">
           {positions.map(position =>
-            <Button key={position} classNames="text-sm" onClick={() => changePosition(position)}>
+            <Button
+              key={position}
+              classNames={position === currentPosition ? 'bg-gray-50 border-gray-400' : ''}
+              onClick={() => changePosition(position)}>
               {position}
             </Button>
           )}
@@ -123,22 +119,12 @@ export const Body = ({ position: currentPosition, setPosition, richColors, setRi
       </SectionContainer>
 
       <SectionContainer classNames="py-4 flex flex-col gap-y-6">
-        <h2 className="text-xl font-semibold">Other</h2>
-        <div className="grid grid-cols-2 sm:grid-flow-col-dense gap-2.5 justify-between">
-          {types.map(type =>
-            <Button key={type} classNames="text-sm" onClick={() => activateRichColors(type)}>
-              rich colors {type}
-            </Button>
-          )}
-        </div>
+        <Toggle
+          label={'Rich colors'}
+          labelClassNames={'text-xl font-semibold'}
+          onChange={activateRichColors} />
         <CodeBlock>
-          <pre>
-{`toast${currentType ? `.${currentType}` : '.success'}('${currentType ? currentType : 'success'} toast message')
-
-<section
-    id="toaster-wrapper"
-    data-rich-colors />`}
-          </pre>
+          {`<section id="toaster-wrapper" ${richColors ? 'data-rich-colors' : ''} />`}
         </CodeBlock>
       </SectionContainer>
     </>

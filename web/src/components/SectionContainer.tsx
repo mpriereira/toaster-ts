@@ -7,7 +7,7 @@ type SectionContainerProps = {
 
 export const SectionContainer = ({ children, classNames }: SectionContainerProps) => {
   return (
-    <section className={`mx-auto w-full lg:w-[740px] ${classNames}`}>
+    <section className={`mx-auto w-full lg:w-[800px] ${classNames}`}>
       {children}
     </section>
   )

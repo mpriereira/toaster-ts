@@ -97,11 +97,11 @@ function registerMouseOver (): void {
   })
 }
 
-function show (msg: string, { description, type }: ToastOptions): void {
+function show (title: string, { description, type }: ToastOptions): void {
   const list = document.getElementById('toaster-list')
   if (list == null) return
 
-  renderToast(list, msg, { description, type })
+  renderToast(list, title, { description, type })
 
   window.setTimeout(() => {
     const el = list.children[0] as HTMLLIElement
@@ -117,7 +117,7 @@ function show (msg: string, { description, type }: ToastOptions): void {
   }, 16)
 }
 
-function renderToast (list: HTMLElement, msg: string, { description, type }: ToastOptions): { toast: HTMLLIElement, id: string } {
+function renderToast (list: HTMLElement, title: string, { description, type }: ToastOptions): { toast: HTMLLIElement, id: string } {
   const toast = document.createElement('li')
   list.prepend(toast)
   const id = genid()
@@ -147,7 +147,7 @@ function renderToast (list: HTMLElement, msg: string, { description, type }: Toa
     }
     <div data-content="">
       <div data-title="">
-        ${msg}
+        ${title}
       </div>
       ${
         description != null
