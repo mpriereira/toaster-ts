@@ -5,7 +5,7 @@ import { Button } from '@/components/Button';
 import { CodeBlock } from '@/components/CodeBlock';
 import { Toggle } from '@/components/Toggle';
 import { useIsMount } from '@/hooks/useIsMount';
-import { toast } from 'toaster-ts';
+import { toast } from '../../../dist';
 
 type BodyProps = {
   position: Position
