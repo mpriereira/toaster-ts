@@ -58,7 +58,7 @@ export const Body = ({ position: currentPosition, setPosition, richColors, setRi
       <SectionContainer classNames="py-4 flex flex-col gap-2.5">
         <h2 className="text-xl font-semibold">Installation</h2>
         <CodeBlock>
-          npm install ts-toaster
+          npm install toaster-ts
         </CodeBlock>
       </SectionContainer>
 
@@ -124,7 +124,7 @@ export const Body = ({ position: currentPosition, setPosition, richColors, setRi
           labelClassNames={'text-xl font-semibold'}
           onChange={activateRichColors} />
         <CodeBlock>
-          {`<section id="toaster-wrapper" ${richColors ? 'data-rich-colors' : ''} />`}
+          {`<section id="toaster-wrapper" ${richColors ? 'data-rich-colors="true"' : ''} />`}
         </CodeBlock>
       </SectionContainer>
     </>
