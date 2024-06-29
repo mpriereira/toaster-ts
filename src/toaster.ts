@@ -1,6 +1,7 @@
-import './styles.scss'
+import './loader.scss'
+import './toaster.scss'
 import { genid } from './utils'
-import { ErrorIcon, InfoIcon, SuccessIcon, WarningIcon } from './assets'
+import { ErrorIcon, InfoIcon, LoadingIcon, SuccessIcon, WarningIcon } from './assets'
 
 const VIEWPORT_OFFSET = '32px'
 const VISIBLE_TOASTS_AMOUNT = 3
@@ -10,9 +11,11 @@ const TIME_BEFORE_UNMOUNT = 200
 const TOAST_WIDTH = 356
 const DEFAULT_POSITION = 'bottom-right'
 
+type ToastType = 'success' | 'error' | 'info' | 'warning' | 'loading'
+
 export interface ToastOptions {
   description?: string
-  type?: 'success' | 'error' | 'info' | 'warning'
+  type?: ToastType
 }
 
 function basicToast (title: string, { description, type }: ToastOptions = { description: '' }): void {
@@ -209,7 +212,7 @@ function remove (el: HTMLLIElement): void {
   el.setAttribute('data-unmount-tid', `${tid}`)
 }
 
-const getAsset = (type: 'success' | 'error' | 'info' | 'warning' | undefined): string | null => {
+const getAsset = (type: ToastType | undefined): string | null => {
   switch (type) {
     case 'success':
       return SuccessIcon
@@ -223,6 +226,9 @@ const getAsset = (type: 'success' | 'error' | 'info' | 'warning' | undefined): s
     case 'error':
       return ErrorIcon
 
+    case 'loading':
+      return LoadingIcon
+
     default:
       return null
   }
@@ -235,6 +241,7 @@ export const toast = Object.assign(
     info: (message: string) => basicToast(message, { type: 'info' }),
     warning: (message: string) => basicToast(message, { type: 'warning' }),
     error: (message: string) => basicToast(message, { type: 'error' }),
+    loading: (message: string) => basicToast(message, { type: 'loading' }),
     message: (message: string, { description }: ToastOptions) => basicToast(message, { description })
   }
 )

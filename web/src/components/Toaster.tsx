@@ -1,5 +1,5 @@
 export const positions = ['top-left', 'top-center', 'top-right', 'bottom-left', 'bottom-center', 'bottom-right'] as const
-export const types = ['success', 'error', 'warning', 'info'] as const
+export const types = ['success', 'error', 'warning', 'info', 'loading'] as const
 export const extendedTypes = ['default', 'withDescription', ...types] as const
 
 export type Position = (typeof positions)[number]

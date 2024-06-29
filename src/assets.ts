@@ -1,3 +1,5 @@
+const lines = Array<number>(12).fill(0)
+
 const SuccessIcon = `
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" height="20" width="20">
     <path
@@ -52,9 +54,15 @@ const ErrorIcon = `
     />
   </svg>`
 
+const LoadingIcon = `
+  <div class="toaster-loader-wrapper">
+    ${lines.map(_i => '<div class="line"></div>').join('\n')}
+  </div>`
+
 export {
   SuccessIcon,
   WarningIcon,
   InfoIcon,
-  ErrorIcon
+  ErrorIcon,
+  LoadingIcon
 }
