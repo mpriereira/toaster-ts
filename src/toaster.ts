@@ -12,7 +12,10 @@ const TIME_BEFORE_UNMOUNT = 200
 const TOAST_WIDTH = 356
 const DEFAULT_POSITION = 'bottom-right'
 
-function basicToast (message: string, { description, type }: ToastOptions): HTMLLIElement {
+function basicToast (
+  message: string,
+  { description, type }: ToastOptions = { description: '' }
+): HTMLLIElement {
   if (document.querySelector('#toaster-wrapper') == null) {
     throw new Error('No wrapper element found, please follow documentation')
   }
