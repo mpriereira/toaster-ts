@@ -1,6 +1,8 @@
-import './styles.scss'
+import './loader.scss'
+import './toaster.scss'
 import { genid } from './utils'
-import { ErrorIcon, InfoIcon, SuccessIcon, WarningIcon } from './assets'
+import { PromiseOptions, ToastOptions, ToastType, ToastUpdateOptions } from './types'
+import { ErrorIcon, InfoIcon, LoadingIcon, SuccessIcon, WarningIcon } from './assets'
 
 const VIEWPORT_OFFSET = '32px'
 const VISIBLE_TOASTS_AMOUNT = 3
@@ -10,25 +12,23 @@ const TIME_BEFORE_UNMOUNT = 200
 const TOAST_WIDTH = 356
 const DEFAULT_POSITION = 'bottom-right'
 
-export interface ToastOptions {
-  description?: string
-  type?: 'success' | 'error' | 'info' | 'warning'
-}
-
-function basicToast (title: string, { description, type }: ToastOptions = { description: '' }): void {
+function basicToast (
+  message: string,
+  { description, type }: ToastOptions = { description: '' }
+): HTMLLIElement {
   if (document.querySelector('#toaster-wrapper') == null) {
-    console.error('No wrapper element found, please follow documentation')
-    return
+    throw new Error('No wrapper element found, please follow documentation')
   }
 
   if (document.getElementById('toaster-list') == null) {
     renderToaster()
-    registerMouseOver()
   }
 
   updatePosition()
   updateRichColors()
-  show(title, { description, type })
+  const { toast } = create(message, { description, type })
+
+  return toast
 }
 
 function renderToaster (): void {
@@ -51,6 +51,8 @@ function renderToaster (): void {
   id="toaster-list"
   style="--front-toast-height: 0px; --offset: ${VIEWPORT_OFFSET}; --width: ${TOAST_WIDTH}px; --gap: ${GAP}px">
   </ol>`
+
+  registerMouseOver()
 }
 
 function updatePosition (): void {
@@ -97,11 +99,10 @@ function registerMouseOver (): void {
   })
 }
 
-function show (title: string, { description, type }: ToastOptions): void {
-  const list = document.getElementById('toaster-list')
-  if (list == null) return
+function create (message: string, { description, type }: ToastOptions): { toast: HTMLLIElement, id: string } {
+  const list = document.getElementById('toaster-list') as HTMLOListElement
 
-  renderToast(list, title, { description, type })
+  const { toast, id } = renderToast(list, message, { description, type })
 
   window.setTimeout(() => {
     const el = list.children[0] as HTMLLIElement
@@ -115,19 +116,20 @@ function show (title: string, { description, type }: ToastOptions): void {
     refreshProperties()
     registerRemoveTimeout(el)
   }, 16)
+
+  return { toast, id }
 }
 
-function renderToast (list: HTMLElement, title: string, { description, type }: ToastOptions): { toast: HTMLLIElement, id: string } {
+function renderToast (list: HTMLElement, message: string, { description, type }: ToastOptions): { toast: HTMLLIElement, id: string } {
   const toast = document.createElement('li')
   list.prepend(toast)
   const id = genid()
   const count = list.children.length
-  const asset = getAsset(type)
-  const toastType = type as string
+  const asset = type != null ? getAsset(type) : null
   toast.outerHTML = `<li
   class="toast"
   data-id="${id}"
-  data-type="${toastType}"
+  data-type="${type != null ? type : ''}"
   data-removed="false"
   data-mounted="false"
   data-front="true"
@@ -147,7 +149,7 @@ function renderToast (list: HTMLElement, title: string, { description, type }: T
     }
     <div data-content="">
       <div data-title="">
-        ${title}
+        ${message}
       </div>
       ${
         description != null
@@ -157,7 +159,7 @@ function renderToast (list: HTMLElement, title: string, { description, type }: T
     </div>
   </li>`
 
-  return { toast, id }
+  return { toast: list.children[0] as HTMLLIElement, id }
 }
 
 function refreshProperties (): void {
@@ -209,7 +211,7 @@ function remove (el: HTMLLIElement): void {
   el.setAttribute('data-unmount-tid', `${tid}`)
 }
 
-const getAsset = (type: 'success' | 'error' | 'info' | 'warning' | undefined): string | null => {
+function getAsset (type: ToastType): string {
   switch (type) {
     case 'success':
       return SuccessIcon
@@ -223,9 +225,35 @@ const getAsset = (type: 'success' | 'error' | 'info' | 'warning' | undefined): s
     case 'error':
       return ErrorIcon
 
-    default:
-      return null
+    case 'loading':
+      return LoadingIcon
   }
+}
+
+function promiseToast<T> (promise: Promise<T>, data: PromiseOptions<T>): void {
+  const toastElement = basicToast(data.loading ?? 'Loading...', { type: 'loading' })
+  promise
+    .then((response) => {
+      const success = typeof data.success === 'function' ? data.success(response) : data.success
+      updateToast(toastElement, { message: success ?? 'Success', type: 'success' })
+    })
+    .catch((err) => {
+      const error = typeof data.error === 'function' ? data.error(err) : data.error
+      updateToast(toastElement, { message: error ?? 'Error', type: 'error' })
+    })
+}
+
+function updateToast (toast: HTMLLIElement, { message, type }: ToastUpdateOptions): void {
+  const asset = getAsset(type)
+  const iconElement = toast.querySelector('[data-icon]')
+  const messageElement = toast.querySelector('[data-title]')
+  if (iconElement != null) {
+    iconElement.outerHTML = asset
+  }
+  if (messageElement != null) {
+    messageElement.replaceWith(message)
+  }
+  toast.setAttribute('data-type', type)
 }
 
 export const toast = Object.assign(
@@ -235,6 +263,8 @@ export const toast = Object.assign(
     info: (message: string) => basicToast(message, { type: 'info' }),
     warning: (message: string) => basicToast(message, { type: 'warning' }),
     error: (message: string) => basicToast(message, { type: 'error' }),
+    loading: (message: string) => basicToast(message, { type: 'loading' }),
+    promise: <T>(promise: Promise<T>, data: PromiseOptions<T>) => promiseToast(promise, data),
     message: (message: string, { description }: ToastOptions) => basicToast(message, { description })
   }
 )

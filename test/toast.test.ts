@@ -10,20 +10,17 @@ beforeAll(() => {
 })
 
 test('toast is rendered in document', () => {
-  toast('Toast notification')
-  const toastElement = document.querySelector('.toast')
+  const toastElement = toast('Toast notification')
   expect(document.querySelector('#toaster-wrapper')).toContain(toastElement)
 })
 
 test('toast text content is correct', () => {
-  toast('Toast notification')
-  const toastElement = document.querySelector('.toast')
+  const toastElement = toast('Toast notification')
   expect(toastElement!.textContent).toContain('Toast notification')
 })
 
 test('toast is cleared after timeout', async () => {
-  toast('Toast notification')
-  const toastElement = document.querySelector('.toast')
+  const toastElement = toast('Toast notification')
   expect(document.querySelector('#toaster-wrapper')).toContain(toastElement)
 
   await delay(4500)
