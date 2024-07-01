@@ -1,6 +1,6 @@
 import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { SectionContainer } from '@/components/SectionContainer';
-import { positions, extendedTypes, Position, Type, ExtendedType } from '@/components/Toaster';
+import { positions, Position } from '@/components/Toaster';
 import { Button } from '@/components/Button';
 import { CodeBlock } from '@/components/CodeBlock';
 import { Toggle } from '@/components/Toggle';
@@ -14,31 +14,87 @@ type BodyProps = {
   setRichColors: Dispatch<SetStateAction<boolean>>
 }
 
+const promiseCode = '`${data.name} has been added`'
+
+const allTypes = [
+  {
+    name: 'Default',
+    snippet: `toast('Event has been created')`,
+    action: () => toast('Event has been created'),
+  },
+  {
+    name: 'Description',
+    snippet: `toast.message('Event has been created', {
+  description: 'Monday, January 3rd at 6:00pm',
+})`,
+    action: () =>
+      toast('Event has been created', {
+        description: 'Monday, January 3rd at 6:00pm',
+      }),
+  },
+  {
+    name: 'Success',
+    snippet: `toast.success('Event has been created')`,
+    action: () => toast.success('Event has been created'),
+  },
+  {
+    name: 'Info',
+    snippet: `toast.info('Be at the area 10 minutes before the event time')`,
+    action: () => toast.info('Be at the area 10 minutes before the event time'),
+  },
+  {
+    name: 'Warning',
+    snippet: `toast.warning('Event start time cannot be earlier than 8am')`,
+    action: () => toast.warning('Event start time cannot be earlier than 8am'),
+  },
+  {
+    name: 'Error',
+    snippet: `toast.error('Event has not been created')`,
+    action: () => toast.error('Event has not been created'),
+  },
+  {
+    name: 'Promise',
+    snippet: `const promise = () => new Promise((resolve) => setTimeout(() => resolve({ name: 'Toast' }), 2000));
+
+toast.promise(promise, {
+  loading: 'Loading...',
+  success: (data) => {
+    return ${promiseCode};
+  },
+  error: 'Error',
+});`,
+    action: () =>
+      toast.promise<{ name: string }>(
+        new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({ name: 'Toast' });
+          }, 2000);
+        }),
+        {
+          loading: 'Loading...',
+          success: (data) => {
+            return `${data.name} has been added`;
+          },
+          error: 'Error',
+        },
+      ),
+  }
+]
+
 export const Body = ({ position: currentPosition, setPosition, richColors, setRichColors }: BodyProps) => {
 
   const isMount = useIsMount()
-  const [currentType, setCurrentType] = useState<ExtendedType>('default')
+  const [activeType, setActiveType] = useState(allTypes[0])
 
   useEffect(() => {
     if (isMount) {
-      showToast({ type: currentType })
+      activeType.action()
     }
   }, [currentPosition, richColors])
 
-  const isStandardType = (type: ExtendedType): type is Type => {
-    return type !== 'default' && type !== 'withDescription'
-  }
-
-  const showToast = ({ type, description }: { type: ExtendedType, description?: string }) => {
-    toast(`${isStandardType(type) ? `${type} toast message` : 'Default toast message'}`, {
-      description,
-      type: isStandardType(type) ? type : undefined
-    })
-  }
-
-  const changeType = ({ type, description }: { type: ExtendedType, description?: string }) => {
-    setCurrentType(type)
-    showToast({ type, description })
+  const changeType = (type: typeof allTypes[number]) => {
+    setActiveType(type)
+    type.action()
   }
 
   const changePosition = (position: Position) => {
@@ -46,7 +102,7 @@ export const Body = ({ position: currentPosition, setPosition, richColors, setRi
       setPosition(position)
       return
     }
-    showToast({ type: currentType })
+    activeType.action()
   }
 
   const activateRichColors = (event: ChangeEvent<HTMLInputElement>) => {
@@ -83,17 +139,17 @@ export const Body = ({ position: currentPosition, setPosition, richColors, setRi
       <SectionContainer classNames="py-4 flex flex-col gap-2.5">
         <h2 className="text-xl font-semibold">Types</h2>
         <div className="grid grid-cols-2 xs:grid-cols-3 md:grid-cols-6 gap-2.5 justify-between">
-          {extendedTypes.map(type =>
+          {allTypes.map(type =>
             <Button
-              key={type}
-              classNames={type === currentType ? 'bg-gray-50 border-gray-400' : ''}
-              onClick={() => changeType({ type, description: type === 'withDescription' ? 'Includes a description' : undefined })}>
-              {type}
+              key={type.name}
+              classNames={type.name === activeType.name ? 'bg-gray-50 border-gray-400' : ''}
+              onClick={() => changeType(type)}>
+              {type.name}
             </Button>
           )}
         </div>
         <CodeBlock>
-          {`toast${isStandardType(currentType) ?`.${currentType}` : `${currentType === 'withDescription' ? `.message` : ''}`}(${isStandardType(currentType) ? `'${currentType} toast message'` : `${currentType === 'withDescription' ? `'Generic toast message', { description: 'Includes a description' }` : `'Generic toast message'`}`})`}
+          {`${activeType.snippet}`}
         </CodeBlock>
       </SectionContainer>
 
