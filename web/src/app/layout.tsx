@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import '@fontsource-variable/onest';
 import "./globals.css";
 
@@ -14,7 +15,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="relative min-h-screen">{children}</body>
+      <body className="relative min-h-screen">
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
